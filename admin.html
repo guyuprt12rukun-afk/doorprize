@@ -47,15 +47,26 @@
     </div>
 
     <!-- Section 3: Pendaftaran -->
-    <div id="sec-pendaftaran" class="tab-content hidden space-y-4">
-      <div class="grid grid-cols-2 gap-2">
-        <input type="text" id="regNama" placeholder="Nama Peserta" class="border p-2 rounded">
-        <input type="text" id="regNik" placeholder="NIK" class="border p-2 rounded">
-      </div>
-      <button id="btnAddPeserta" class="bg-blue-600 text-white px-4 py-2 rounded">Tambah Peserta Manual</button>
-      <h2 class="font-bold mt-4">Daftar Peserta Realtime</h2>
-      <ul id="listPeserta" class="divide-y border rounded-lg p-2 max-h-60 overflow-y-auto"></ul>
-    </div>
+    <form id="formReg" class="space-y-3">
+  <input type="text" id="nama" placeholder="Nama Lengkap" class="w-full border p-2 rounded" required>
+  <input type="text" id="nik" placeholder="NIK / Nomor Identitas" class="w-full border p-2 rounded" required>
+  <input type="text" id="alamat" placeholder="Alamat" class="w-full border p-2 rounded" required>
+  
+  <!-- Tombol Ambil Foto Selfie (Otomatis Buka Kamera HP) -->
+  <div>
+    <label class="block text-sm font-medium mb-1">Foto Selfie Peserta:</label>
+    <input type="file" id="fotoInput" accept="image/*" capture="user" class="w-full border p-2 rounded bg-white" required>
+  </div>
+
+  <!-- Pratinjau Foto -->
+  <div id="previewContainer" class="hidden text-center mt-2">
+    <img id="imgPreview" class="w-32 h-32 object-cover rounded-full mx-auto border-2 border-blue-500 shadow">
+  </div>
+
+  <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white py-2 rounded font-bold mt-2">
+    Daftar & Dapatkan Kupon
+  </button>
+</form>
 
     <!-- Section 4: Mesin Acak -->
     <div id="sec-mesin" class="tab-content hidden space-y-4">
@@ -170,6 +181,76 @@
         }
       }, { onlyOnce: true });
     };
+
+    let photoBase64 = "";
+
+// Preview & Konversi Gambar saat foto diambil dari Kamera
+document.getElementById('fotoInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      // Kecilkan resolusi gambar agar hemat penyimpanan Firebase
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 300; // Ukuran foto cukup 300px untuk display
+        const scaleFactor = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleFactor;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Hasil kompresi fotoBase64
+        photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+        // Tampilkan Preview Foto
+        document.getElementById('imgPreview').src = photoBase64;
+        document.getElementById('previewContainer').classList.remove('hidden');
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Simpan Data Pendaftaran ke Firebase
+document.getElementById('formReg').onsubmit = (e) => {
+  e.preventDefault();
+
+  if (!photoBase64) {
+    alert("Silakan ambil foto selfie terlebih dahulu!");
+    return;
+  }
+
+  const name = document.getElementById('nama').value;
+  const nik = document.getElementById('nik').value;
+  const alamat = document.getElementById('alamat').value;
+
+  // Baca jumlah total peserta untuk kupon (001, 002, dst.)
+  onValue(ref(db, 'participants'), (snap) => {
+    const totalCount = snap.exists() ? Object.keys(snap.val()).length : 0;
+    const couponId = String(totalCount + 1).padStart(3, '0');
+
+    push(ref(db, 'participants'), {
+      couponId: couponId,
+      name: name,
+      nik: nik,
+      address: alamat,
+      photoUrl: photoBase64, // Menyimpan foto selfie peserta
+      isWinner: false,
+      isLocked: false
+    }).then(() => {
+      alert(`Pendaftaran Berhasil! Nomor Kupon Anda: ${couponId}`);
+      document.getElementById('formReg').reset();
+      document.getElementById('previewContainer').classList.add('hidden');
+      photoBase64 = "";
+    });
+  }, { onlyOnce: true });
+};
+
+    
   </script>
 </body>
 </html>
