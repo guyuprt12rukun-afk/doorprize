@@ -2,53 +2,155 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Undian Doorprize</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undian Doorprize Realtime</title>
+  <!-- Tailwind CSS & Font Inter -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.3); }
+      50% { box-shadow: 0 0 50px rgba(234, 179, 8, 0.6); }
+    }
+    .glow-active { animation: pulse-glow 2s infinite; }
+  </style>
 </head>
-<body id="bgBody" class="min-h-screen bg-cover bg-center flex flex-col justify-between p-8 text-white bg-slate-900">
+<body id="bgBody" class="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 bg-cover bg-center text-white flex flex-col justify-between p-6 lg:p-10 relative overflow-hidden">
   
-  <header class="text-center">
-    <h1 id="titleText" class="text-5xl font-bold drop-shadow-md">Doorprize</h1>
+  <!-- Aksesori Cahaya Latar -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Header Judul -->
+  <header class="text-center z-10 my-2">
+    <span class="px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-amber-400 text-sm font-semibold tracking-wider uppercase backdrop-blur-md">
+      Live Event Doorprize
+    </span>
+    <h1 id="titleText" class="text-4xl lg:text-6xl font-extrabold mt-3 bg-clip-text text-transparent bg-gradient-to-r from-white via-amber-200 to-amber-500 drop-shadow-lg">
+      DOORPRIZE UTAMA
+    </h1>
   </header>
 
-  <main class="flex justify-around items-center my-auto">
-    <!-- Area Hadiah -->
-    <div class="text-center bg-black/40 p-6 rounded-xl backdrop-blur-md border border-white/20 w-1/3">
-      <h2 id="prizeName" class="text-3xl font-bold mb-4">HADIAH</h2>
-      <img id="prizeImg" src="https://via.placeholder.com/300?text=Foto+Hadiah" class="w-64 h-64 object-cover mx-auto rounded-lg border-2 border-white">
+  <!-- Area Utama Display (Dua Kartu Utama) -->
+  <main class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl w-full mx-auto my-auto z-10 items-stretch">
+    
+    <!-- Kartu Hadiah -->
+    <div class="glass-card rounded-3xl p-6 lg:p-8 flex flex-col items-center justify-between text-center shadow-2xl relative group overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
+      
+      <div class="w-full">
+        <span class="text-xs font-bold tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3 py-1 rounded-md">
+          Kategori Hadiah
+        </span>
+        <h2 id="prizeName" class="text-2xl lg:text-3xl font-extrabold mt-2 text-white tracking-wide">
+          Satu Unit Sepeda Motor
+        </h2>
+      </div>
+
+      <div class="my-6 relative flex items-center justify-center w-full">
+        <div class="w-56 h-56 lg:w-72 lg:h-72 rounded-2xl overflow-hidden border-2 border-amber-400/40 shadow-inner bg-slate-900/80 flex items-center justify-center">
+          <img id="prizeImg" src="https://via.placeholder.com/400x400?text=Foto+Hadiah" alt="Foto Hadiah" class="w-full h-full object-cover transform hover:scale-105 transition duration-500">
+        </div>
+      </div>
+
+      <div class="w-full bg-amber-400/10 border border-amber-400/20 py-2 rounded-xl">
+        <p class="text-xs text-amber-300 font-medium">STATUS HADIAH</p>
+        <p id="prizeStatus" class="text-sm font-bold text-white">Siap Diundi</p>
+      </div>
     </div>
 
-    <!-- Area Acak Peserta -->
-    <div class="text-center bg-black/40 p-6 rounded-xl backdrop-blur-md border border-white/20 w-1/3">
-      <img id="participantPhoto" src="https://via.placeholder.com/200?text=Foto+Peserta" class="w-48 h-48 object-cover mx-auto rounded-full mb-4 border-4 border-yellow-400">
-      <h3 id="participantName" class="text-3xl font-bold text-yellow-300">NAMA PESERTA</h3>
-      <p id="participantCoupon" class="text-2xl mt-2 font-mono">No. Undian: -</p>
+    <!-- Kartu Peserta Acak -->
+    <div class="glass-card rounded-3xl p-6 lg:p-8 flex flex-col items-center justify-between text-center shadow-2xl glow-active relative overflow-hidden border-amber-400/30">
+      
+      <div class="w-full">
+        <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase bg-emerald-400/10 px-3 py-1 rounded-md">
+          Peserta Terpilih
+        </span>
+      </div>
+
+      <!-- Foto Peserta -->
+      <div class="my-4 relative">
+        <div class="w-44 h-44 lg:w-56 lg:h-56 rounded-full overflow-hidden border-4 border-amber-400 shadow-2xl mx-auto bg-slate-800">
+          <img id="participantPhoto" src="https://via.placeholder.com/300x300?text=Peserta" alt="Foto Peserta" class="w-full h-full object-cover">
+        </div>
+      </div>
+
+      <!-- Detail Nama & Kupon -->
+      <div class="w-full space-y-2">
+        <h3 id="participantName" class="text-2xl lg:text-4xl font-extrabold text-amber-300 tracking-tight line-clamp-1">
+          NAMA PESERTA
+        </h3>
+        
+        <div class="inline-block bg-slate-900/90 border border-white/20 px-6 py-2 rounded-2xl">
+          <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Nomor Kupon</p>
+          <p id="participantCoupon" class="text-2xl lg:text-3xl font-mono font-black text-white tracking-widest">
+            #000
+          </p>
+        </div>
+      </div>
+
     </div>
+
   </main>
 
+  <!-- Footer / Status Sinkronisasi Realtime -->
+  <footer class="text-center z-10 my-2">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 border border-white/10 text-xs text-slate-400">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+      Sistem Realtime Terhubung
+    </div>
+  </footer>
+
+  <!-- Script Firebase & Logika Tampilan -->
   <script type="module">
     import { db, ref, onValue } from './js/config.js';
 
-    // Sinkronisasi Setting Tampilan
+    // Sinkronisasi Pengaturan Tampilan
     onValue(ref(db, 'settings'), (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        if(data.title) document.getElementById('titleText').innerText = data.title;
-        if(data.bgUrl) document.getElementById('bgBody').style.backgroundImage = `url('${data.bgUrl}')`;
+        if (data.title) document.getElementById('titleText').innerText = data.title;
+        if (data.bgUrl) document.getElementById('bgBody').style.backgroundImage = `url('${data.bgUrl}')`;
       }
     });
 
-    // Sinkronisasi Kontrol Acak Realtime
+    // Sinkronisasi State Pengundian Realtime
     onValue(ref(db, 'draw_state'), (snapshot) => {
       const state = snapshot.val();
       if (state) {
+        // Update data hadiah
         document.getElementById('prizeName').innerText = state.currentPrize || "HADIAH";
-        if (state.currentPrizeImg) document.getElementById('prizeImg').src = state.currentPrizeImg;
-        
+        if (state.currentPrizeImg) {
+          document.getElementById('prizeImg').src = state.currentPrizeImg;
+        }
+
+        // Update data peserta
         if (state.activeParticipant) {
           document.getElementById('participantName').innerText = state.activeParticipant.name || "---";
-          document.getElementById('participantCoupon').innerText = "No. Undian: " + (state.activeParticipant.couponId || "---");
-          if(state.activeParticipant.photoUrl) document.getElementById('participantPhoto').src = state.activeParticipant.photoUrl;
+          document.getElementById('participantCoupon').innerText = "#" + (state.activeParticipant.couponId || "000");
+          if (state.activeParticipant.photoUrl) {
+            document.getElementById('participantPhoto').src = state.activeParticipant.photoUrl;
+          }
+        }
+
+        // Update indikator status
+        const statusEl = document.getElementById('prizeStatus');
+        if (state.status === 'SPINNING') {
+          statusEl.innerText = "Mengacak Peserta...";
+          statusEl.className = "text-sm font-bold text-amber-400 animate-pulse";
+        } else if (state.status === 'STOPPED') {
+          statusEl.innerText = "Pemenang Terkunci!";
+          statusEl.className = "text-sm font-bold text-emerald-400";
+        } else {
+          statusEl.innerText = "Siap Diundi";
+          statusEl.className = "text-sm font-bold text-white";
         }
       }
     });
