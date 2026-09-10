@@ -2,15 +2,19 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getDatabase, ref, set, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "API_KEY_ANDA",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://PROJECT_ID-default-rtdb.firebaseio.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyAO05fwjsreiun_lSEo2SxO3TGwQNmdXmE",
+  authDomain: "doorprize-app-eee26.firebaseapp.com",
+  databaseURL: "https://doorprize-app-eee26-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "doorprize-app-eee26",
+  storageBucket: "doorprize-app-eee26.firebasestorage.app",
+  messagingSenderId: "751643663",
+  appId: "1:751643663:web:38e68a4de95c561ae8c77a",
+  measurementId: "G-H9RHPX3J7J"
 };
 
 const app = initializeApp(firebaseConfig);
-export const db = getDatabase(app);
+
+// SANGAT PENTING: Masukkan databaseURL ke dalam getDatabase agar mengarah ke asia-southeast1
+export const db = getDatabase(app, firebaseConfig.databaseURL);
+
 export { ref, set, onValue, update, push, remove };
