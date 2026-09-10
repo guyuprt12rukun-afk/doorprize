@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Mesin Panitia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-md p-6">
+    <h1 class="text-2xl font-bold mb-6 border-b pb-2">MESIN - PANITIA</h1>
+
+    <!-- Tab Navigasi -->
+    <div class="flex space-x-4 mb-6">
+      <button onclick="switchTab('dashboard')" class="px-4 py-2 bg-blue-600 text-white rounded">Dashboard</button>
+      <button onclick="switchTab('setting')" class="px-4 py-2 bg-gray-200 rounded">Setting</button>
+      <button onclick="switchTab('pendaftaran')" class="px-4 py-2 bg-gray-200 rounded">Pendaftaran</button>
+      <button onclick="switchTab('mesin')" class="px-4 py-2 bg-gray-200 rounded">Mesin</button>
+    </div>
+
+    <!-- Section 1: Dashboard -->
+    <div id="sec-dashboard" class="tab-content">
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <p class="text-gray-600">Jumlah Peserta</p>
+          <p id="totalPeserta" class="text-3xl font-bold">0</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <p class="text-gray-600">Jumlah Pemenang</p>
+          <p id="totalPemenang" class="text-3xl font-bold">0</p>
+        </div>
+      </div>
+      <h2 class="font-bold mb-2">Peserta Yang Menang:</h2>
+      <ul id="listPemenang" class="divide-y border rounded-lg p-2 bg-gray-50"></ul>
+    </div>
+
+    <!-- Section 2: Setting -->
+    <div id="sec-setting" class="tab-content hidden space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Nama Kegiatan (Title):</label>
+        <input type="text" id="cfgTitle" class="w-full border p-2 rounded">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">URL Background:</label>
+        <input type="text" id="cfgBg" class="w-full border p-2 rounded" placeholder="https://...">
+      </div>
+      <button id="btnSaveSetting" class="bg-green-600 text-white px-4 py-2 rounded">Simpan Pengaturan</button>
+    </div>
+
+    <!-- Section 3: Pendaftaran -->
+    <div id="sec-pendaftaran" class="tab-content hidden space-y-4">
+      <div class="grid grid-cols-2 gap-2">
+        <input type="text" id="regNama" placeholder="Nama Peserta" class="border p-2 rounded">
+        <input type="text" id="regNik" placeholder="NIK" class="border p-2 rounded">
+      </div>
+      <button id="btnAddPeserta" class="bg-blue-600 text-white px-4 py-2 rounded">Tambah Peserta Manual</button>
+      <h2 class="font-bold mt-4">Daftar Peserta Realtime</h2>
+      <ul id="listPeserta" class="divide-y border rounded-lg p-2 max-h-60 overflow-y-auto"></ul>
+    </div>
+
+    <!-- Section 4: Mesin Acak -->
+    <div id="sec-mesin" class="tab-content hidden space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Nama Hadiah:</label>
+        <input type="text" id="prizeInput" class="w-full border p-2 rounded" placeholder="Contoh: Satu Mobil">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">URL Foto Hadiah:</label>
+        <input type="text" id="prizeImgInput" class="w-full border p-2 rounded" placeholder="https://...">
+      </div>
+      <div class="flex space-x-4 pt-4">
+        <button id="btnAcak" class="bg-green-600 text-white px-6 py-3 text-lg rounded font-bold">ACAK</button>
+        <button id="btnStop" class="bg-red-600 text-white px-6 py-3 text-lg rounded font-bold">STOP</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { db, ref, set, onValue, update, push } from './js/config.js';
+
+    let participants = [];
+    let timer = null;
+
+    // Toggling Tab
+    window.switchTab = (tab) => {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`sec-${tab}`).classList.remove('hidden');
+    };
+
+    // Baca Data Peserta
+    onValue(ref(db, 'participants'), (snapshot) => {
+      const data = snapshot.val();
+      participants = data ? Object.keys(data).map(k => ({id: k, ...data[k]})) : [];
+      
+      document.getElementById('totalPeserta').innerText = participants.length;
+      document.getElementById('listPeserta').innerHTML = participants
+        .map(p => `<li class="py-1 flex justify-between"><span>[${p.couponId}] ${p.name}</span> <span>${p.isWinner ? '🏆 Menang' : 'Aktif'}</span></li>`)
+        .join('');
+
+      const pemenang = participants.filter(p => p.isWinner);
+      document.getElementById('totalPemenang').innerText = pemenang.length;
+      document.getElementById('listPemenang').innerHTML = pemenang
+        .map(p => `<li class="py-1"><b>[${p.couponId}] ${p.name}</b> - Hadiah: ${p.prizeName || '-'}</li>`)
+        .join('');
+    });
+
+    // Simpan Setting
+    document.getElementById('btnSaveSetting').onclick = () => {
+      update(ref(db, 'settings'), {
+        title: document.getElementById('cfgTitle').value,
+        bgUrl: document.getElementById('cfgBg').value
+      });
+      alert('Setting berhasil disimpan!');
+    };
+
+    // Tambah Peserta Manual
+    document.getElementById('btnAddPeserta').onclick = () => {
+      const name = document.getElementById('regNama').value;
+      const nik = document.getElementById('regNik').value;
+      if (!name) return;
+
+      const couponId = String(participants.length + 1).padStart(3, '0');
+      push(ref(db, 'participants'), {
+        couponId, name, nik, isWinner: false, isLocked: false,
+        photoUrl: 'https://via.placeholder.com/200?text=' + encodeURIComponent(name)
+      });
+      document.getElementById('regNama').value = '';
+      document.getElementById('regNik').value = '';
+    };
+
+    // Logika Pengacak Doorprize
+    document.getElementById('btnAcak').onclick = () => {
+      const activeCandidates = participants.filter(p => !p.isLocked && !p.isWinner);
+      if (activeCandidates.length === 0) return alert('Tidak ada peserta aktif tersisa!');
+
+      const prizeName = document.getElementById('prizeInput').value || "Hadiah";
+      const prizeImg = document.getElementById('prizeImgInput').value;
+
+      timer = setInterval(() => {
+        const rand = activeCandidates[Math.floor(Math.random() * activeCandidates.length)];
+        set(ref(db, 'draw_state'), {
+          status: 'SPINNING',
+          currentPrize: prizeName,
+          currentPrizeImg: prizeImg,
+          activeParticipant: rand
+        });
+      }, 100);
+    };
+
+    document.getElementById('btnStop').onclick = () => {
+      if (!timer) return;
+      clearInterval(timer);
+      timer = null;
+
+      // Ambil data pemenang terakhir di draw_state
+      onValue(ref(db, 'draw_state'), (snapshot) => {
+        const state = snapshot.val();
+        if (state && state.activeParticipant && state.status === 'SPINNING') {
+          const winner = state.activeParticipant;
+          
+          // Kunci & Tandai Pemenang
+          update(ref(db, `participants/${winner.id}`), {
+            isWinner: true,
+            isLocked: true,
+            prizeName: state.currentPrize
+          });
+
+          // Ubah Status ke STOPPED
+          update(ref(db, 'draw_state'), { status: 'STOPPED' });
+        }
+      }, { onlyOnce: true });
+    };
+  </script>
+</body>
+</html>
