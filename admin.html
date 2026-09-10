@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Mesin Panitia</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Library Confetti untuk Efek Gebyar Kemenangan -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="bg-gray-100 p-6">
   <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-md p-6">
@@ -72,13 +74,11 @@
           <input type="text" id="alamat" placeholder="Masukkan alamat..." class="w-full border p-2 rounded bg-white" required>
         </div>
         
-        <!-- Tombol Ambil Foto Selfie (Otomatis Buka Kamera HP) -->
         <div>
           <label class="block text-sm font-medium mb-1">Foto Selfie Peserta:</label>
           <input type="file" id="fotoInput" accept="image/*" capture="user" class="w-full border p-2 rounded bg-white" required>
         </div>
 
-        <!-- Pratinjau Foto -->
         <div id="previewContainer" class="hidden text-center mt-2">
           <img id="imgPreview" class="w-32 h-32 object-cover rounded-full mx-auto border-2 border-blue-500 shadow">
         </div>
@@ -113,6 +113,30 @@
     let participants = [];
     let timer = null;
     let photoBase64 = "";
+
+    // Fungsi Pesta Gebyar Confetti Kemenangan
+    function triggerVictoryEffects() {
+      const duration = 3 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        // Hujan kertas dari sisi kiri dan kanan layar
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      }, 250);
+    }
 
     // Navigasi Tab
     window.switchTab = (tab) => {
@@ -247,6 +271,9 @@
           });
 
           update(ref(db, 'draw_state'), { status: 'STOPPED' });
+
+          // Panggil Efek Gebyar Kemenangan
+          triggerVictoryEffects();
         }
       }, { onlyOnce: true });
     };
