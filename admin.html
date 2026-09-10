@@ -29,58 +29,79 @@
           <p id="totalPemenang" class="text-3xl font-bold">0</p>
         </div>
       </div>
-      <h2 class="font-bold mb-2">Peserta Yang Menang:</h2>
-      <ul id="listPemenang" class="divide-y border rounded-lg p-2 bg-gray-50"></ul>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h2 class="font-bold mb-2">Daftar Semua Peserta:</h2>
+          <ul id="listPeserta" class="divide-y border rounded-lg p-2 bg-gray-50 max-h-60 overflow-y-auto"></ul>
+        </div>
+        <div>
+          <h2 class="font-bold mb-2">Peserta Yang Menang:</h2>
+          <ul id="listPemenang" class="divide-y border rounded-lg p-2 bg-gray-50 max-h-60 overflow-y-auto"></ul>
+        </div>
+      </div>
     </div>
 
     <!-- Section 2: Setting -->
     <div id="sec-setting" class="tab-content hidden space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nama Kegiatan (Title):</label>
+        <label class="block text-sm font-medium mb-1">Nama Kegiatan (Title):</label>
         <input type="text" id="cfgTitle" class="w-full border p-2 rounded">
       </div>
       <div>
-        <label class="block text-sm font-medium">URL Background:</label>
+        <label class="block text-sm font-medium mb-1">URL Background:</label>
         <input type="text" id="cfgBg" class="w-full border p-2 rounded" placeholder="https://...">
       </div>
-      <button id="btnSaveSetting" class="bg-green-600 text-white px-4 py-2 rounded">Simpan Pengaturan</button>
+      <button id="btnSaveSetting" class="bg-green-600 text-white px-4 py-2 rounded font-semibold">Simpan Pengaturan</button>
     </div>
 
     <!-- Section 3: Pendaftaran -->
-    <form id="formReg" class="space-y-3">
-  <input type="text" id="nama" placeholder="Nama Lengkap" class="w-full border p-2 rounded" required>
-  <input type="text" id="nik" placeholder="NIK / Nomor Identitas" class="w-full border p-2 rounded" required>
-  <input type="text" id="alamat" placeholder="Alamat" class="w-full border p-2 rounded" required>
-  
-  <!-- Tombol Ambil Foto Selfie (Otomatis Buka Kamera HP) -->
-  <div>
-    <label class="block text-sm font-medium mb-1">Foto Selfie Peserta:</label>
-    <input type="file" id="fotoInput" accept="image/*" capture="user" class="w-full border p-2 rounded bg-white" required>
-  </div>
+    <div id="sec-pendaftaran" class="tab-content hidden max-w-xl mx-auto">
+      <h2 class="text-xl font-bold mb-4 border-b pb-2">Form Pendaftaran Peserta</h2>
+      <form id="formReg" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Nama Lengkap:</label>
+          <input type="text" id="nama" placeholder="Masukkan nama..." class="w-full border p-2 rounded bg-white" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">NIK / Nomor Identitas:</label>
+          <input type="text" id="nik" placeholder="Masukkan NIK..." class="w-full border p-2 rounded bg-white" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Alamat:</label>
+          <input type="text" id="alamat" placeholder="Masukkan alamat..." class="w-full border p-2 rounded bg-white" required>
+        </div>
+        
+        <!-- Tombol Ambil Foto Selfie (Otomatis Buka Kamera HP) -->
+        <div>
+          <label class="block text-sm font-medium mb-1">Foto Selfie Peserta:</label>
+          <input type="file" id="fotoInput" accept="image/*" capture="user" class="w-full border p-2 rounded bg-white" required>
+        </div>
 
-  <!-- Pratinjau Foto -->
-  <div id="previewContainer" class="hidden text-center mt-2">
-    <img id="imgPreview" class="w-32 h-32 object-cover rounded-full mx-auto border-2 border-blue-500 shadow">
-  </div>
+        <!-- Pratinjau Foto -->
+        <div id="previewContainer" class="hidden text-center mt-2">
+          <img id="imgPreview" class="w-32 h-32 object-cover rounded-full mx-auto border-2 border-blue-500 shadow">
+        </div>
 
-  <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white py-2 rounded font-bold mt-2">
-    Daftar & Dapatkan Kupon
-  </button>
-</form>
+        <button type="submit" id="btnSubmit" class="w-full bg-blue-600 text-white py-2 rounded font-bold mt-2 hover:bg-blue-700">
+          Daftar & Dapatkan Kupon
+        </button>
+      </form>
+    </div>
 
     <!-- Section 4: Mesin Acak -->
     <div id="sec-mesin" class="tab-content hidden space-y-4">
       <div>
-        <label class="block text-sm font-medium">Nama Hadiah:</label>
-        <input type="text" id="prizeInput" class="w-full border p-2 rounded" placeholder="Contoh: Satu Mobil">
+        <label class="block text-sm font-medium mb-1">Nama Hadiah:</label>
+        <input type="text" id="prizeInput" class="w-full border p-2 rounded" placeholder="Contoh: Sepeda Motor">
       </div>
       <div>
-        <label class="block text-sm font-medium">URL Foto Hadiah:</label>
+        <label class="block text-sm font-medium mb-1">URL Foto Hadiah:</label>
         <input type="text" id="prizeImgInput" class="w-full border p-2 rounded" placeholder="https://...">
       </div>
       <div class="flex space-x-4 pt-4">
-        <button id="btnAcak" class="bg-green-600 text-white px-6 py-3 text-lg rounded font-bold">ACAK</button>
-        <button id="btnStop" class="bg-red-600 text-white px-6 py-3 text-lg rounded font-bold">STOP</button>
+        <button id="btnAcak" class="bg-green-600 text-white px-6 py-3 text-lg rounded font-bold hover:bg-green-700">ACAK</button>
+        <button id="btnStop" class="bg-red-600 text-white px-6 py-3 text-lg rounded font-bold hover:bg-red-700">STOP</button>
       </div>
     </div>
 
@@ -91,31 +112,36 @@
 
     let participants = [];
     let timer = null;
+    let photoBase64 = "";
 
-    // Toggling Tab
+    // Navigasi Tab
     window.switchTab = (tab) => {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.getElementById(`sec-${tab}`).classList.remove('hidden');
     };
 
-    // Baca Data Peserta
+    // Baca Data Realtime Peserta
     onValue(ref(db, 'participants'), (snapshot) => {
       const data = snapshot.val();
       participants = data ? Object.keys(data).map(k => ({id: k, ...data[k]})) : [];
       
       document.getElementById('totalPeserta').innerText = participants.length;
-      document.getElementById('listPeserta').innerHTML = participants
-        .map(p => `<li class="py-1 flex justify-between"><span>[${p.couponId}] ${p.name}</span> <span>${p.isWinner ? '🏆 Menang' : 'Aktif'}</span></li>`)
-        .join('');
+      
+      const listPesertaEl = document.getElementById('listPeserta');
+      if (listPesertaEl) {
+        listPesertaEl.innerHTML = participants
+          .map(p => `<li class="py-2 px-1 flex justify-between border-b text-sm"><span>[${p.couponId}] <b>${p.name}</b></span> <span class="${p.isWinner ? 'text-green-600 font-bold' : 'text-gray-500'}">${p.isWinner ? '🏆 Menang' : 'Aktif'}</span></li>`)
+          .join('');
+      }
 
       const pemenang = participants.filter(p => p.isWinner);
       document.getElementById('totalPemenang').innerText = pemenang.length;
       document.getElementById('listPemenang').innerHTML = pemenang
-        .map(p => `<li class="py-1"><b>[${p.couponId}] ${p.name}</b> - Hadiah: ${p.prizeName || '-'}</li>`)
+        .map(p => `<li class="py-2 px-1 border-b text-sm"><b>[${p.couponId}] ${p.name}</b> - Hadiah: ${p.prizeName || '-'}</li>`)
         .join('');
     });
 
-    // Simpan Setting
+    // Simpan Pengaturan
     document.getElementById('btnSaveSetting').onclick = () => {
       update(ref(db, 'settings'), {
         title: document.getElementById('cfgTitle').value,
@@ -124,19 +150,65 @@
       alert('Setting berhasil disimpan!');
     };
 
-    // Tambah Peserta Manual
-    document.getElementById('btnAddPeserta').onclick = () => {
-      const name = document.getElementById('regNama').value;
-      const nik = document.getElementById('regNik').value;
-      if (!name) return;
+    // Preview & Kompres Foto Kamera
+    document.getElementById('fotoInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 300;
+            const scaleFactor = MAX_WIDTH / img.width;
+            canvas.width = MAX_WIDTH;
+            canvas.height = img.height * scaleFactor;
 
-      const couponId = String(participants.length + 1).padStart(3, '0');
-      push(ref(db, 'participants'), {
-        couponId, name, nik, isWinner: false, isLocked: false,
-        photoUrl: 'https://via.placeholder.com/200?text=' + encodeURIComponent(name)
-      });
-      document.getElementById('regNama').value = '';
-      document.getElementById('regNik').value = '';
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            document.getElementById('imgPreview').src = photoBase64;
+            document.getElementById('previewContainer').classList.remove('hidden');
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Submit Form Pendaftaran
+    document.getElementById('formReg').onsubmit = (e) => {
+      e.preventDefault();
+
+      if (!photoBase64) {
+        alert("Silakan ambil foto selfie terlebih dahulu!");
+        return;
+      }
+
+      const name = document.getElementById('nama').value;
+      const nik = document.getElementById('nik').value;
+      const alamat = document.getElementById('alamat').value;
+
+      onValue(ref(db, 'participants'), (snap) => {
+        const totalCount = snap.exists() ? Object.keys(snap.val()).length : 0;
+        const couponId = String(totalCount + 1).padStart(3, '0');
+
+        push(ref(db, 'participants'), {
+          couponId: couponId,
+          name: name,
+          nik: nik,
+          address: alamat,
+          photoUrl: photoBase64,
+          isWinner: false,
+          isLocked: false
+        }).then(() => {
+          alert(`Pendaftaran Berhasil! Nomor Kupon: ${couponId}`);
+          document.getElementById('formReg').reset();
+          document.getElementById('previewContainer').classList.add('hidden');
+          photoBase64 = "";
+        });
+      }, { onlyOnce: true });
     };
 
     // Logika Pengacak Doorprize
@@ -163,94 +235,21 @@
       clearInterval(timer);
       timer = null;
 
-      // Ambil data pemenang terakhir di draw_state
       onValue(ref(db, 'draw_state'), (snapshot) => {
         const state = snapshot.val();
         if (state && state.activeParticipant && state.status === 'SPINNING') {
           const winner = state.activeParticipant;
           
-          // Kunci & Tandai Pemenang
           update(ref(db, `participants/${winner.id}`), {
             isWinner: true,
             isLocked: true,
             prizeName: state.currentPrize
           });
 
-          // Ubah Status ke STOPPED
           update(ref(db, 'draw_state'), { status: 'STOPPED' });
         }
       }, { onlyOnce: true });
     };
-
-    let photoBase64 = "";
-
-// Preview & Konversi Gambar saat foto diambil dari Kamera
-document.getElementById('fotoInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      // Kecilkan resolusi gambar agar hemat penyimpanan Firebase
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 300; // Ukuran foto cukup 300px untuk display
-        const scaleFactor = MAX_WIDTH / img.width;
-        canvas.width = MAX_WIDTH;
-        canvas.height = img.height * scaleFactor;
-
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        // Hasil kompresi fotoBase64
-        photoBase64 = canvas.toDataURL('image/jpeg', 0.7);
-
-        // Tampilkan Preview Foto
-        document.getElementById('imgPreview').src = photoBase64;
-        document.getElementById('previewContainer').classList.remove('hidden');
-      };
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Simpan Data Pendaftaran ke Firebase
-document.getElementById('formReg').onsubmit = (e) => {
-  e.preventDefault();
-
-  if (!photoBase64) {
-    alert("Silakan ambil foto selfie terlebih dahulu!");
-    return;
-  }
-
-  const name = document.getElementById('nama').value;
-  const nik = document.getElementById('nik').value;
-  const alamat = document.getElementById('alamat').value;
-
-  // Baca jumlah total peserta untuk kupon (001, 002, dst.)
-  onValue(ref(db, 'participants'), (snap) => {
-    const totalCount = snap.exists() ? Object.keys(snap.val()).length : 0;
-    const couponId = String(totalCount + 1).padStart(3, '0');
-
-    push(ref(db, 'participants'), {
-      couponId: couponId,
-      name: name,
-      nik: nik,
-      address: alamat,
-      photoUrl: photoBase64, // Menyimpan foto selfie peserta
-      isWinner: false,
-      isLocked: false
-    }).then(() => {
-      alert(`Pendaftaran Berhasil! Nomor Kupon Anda: ${couponId}`);
-      document.getElementById('formReg').reset();
-      document.getElementById('previewContainer').classList.add('hidden');
-      photoBase64 = "";
-    });
-  }, { onlyOnce: true });
-};
-
-    
   </script>
 </body>
 </html>
